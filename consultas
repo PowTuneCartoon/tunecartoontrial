@@ -1,3 +1,5 @@
+from src.utils import DeforumAnimArgs
+
 #@markdown **Load Settings**
 override_settings_with_file = False #@param {type:"boolean"}
 custom_settings_file = "/content/drive/MyDrive/Settings.txt"#@param {type:"string"}
