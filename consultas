@@ -36,7 +36,7 @@ def DeforumArgs():
     seed_behavior = "random" #@param ["iter","fixed","random"]
     make_grid = False #@param {type:"boolean"}
     grid_rows = 2 #@param 
-    outdir = get_output_folder(output_path, batch_name)
+    outdir = get_output_folder(args_dict["output_path"], batch_name)
 
     #@markdown **Init Settings**
     use_init = False #@param {type:"boolean"}
