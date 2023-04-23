@@ -1,5 +1,6 @@
 from src.utils import DeforumAnimArgs
 
+
 #@markdown **Load Settings**
 override_settings_with_file = False #@param {type:"boolean"}
 custom_settings_file = "/content/drive/MyDrive/Settings.txt"#@param {type:"string"}
@@ -19,12 +20,109 @@ def DeforumArgs():
     dynamic_threshold = None
     static_threshold = None   
 
-    #@markdown **Save & Display Settings**
-    save_samples = True #@param {type:"boolean"}
-    save_settings = True #@param {type:"boolean"}
-    display_samples = True #@param {type:"boolean"}
-    save_sample_per_step = False #@param {type:"boolean"}
-    show_sample_per_step = False #@param {type:"boolean"}
+import os
+import torch
+import argparse
+import subprocess
+
+from src.deforum import *
+from src.transforms import get_transforms
+from src.utils import DeforumAnimArgs
+
+
+#@markdown **Save & Display Settings**
+settings = DeforumAnimArgs({
+    "model": "pretrained_models/best_hq.pth",
+    "animation_fps": 25,
+    "animation_resolution": "360",
+    "output_folder": "output",
+    "input": "examples/test.jpg",
+    "anime_style": "Shinkai",
+    "renderer": "opencv",
+    "video_codec": "mp4v",
+})
+
+os.makedirs(settings.output_folder, exist_ok=True)
+
+#@markdown ---
+#@markdown ## Advanced Settings
+
+#@markdown **Stylization Options**
+
+anime_stylizers = [
+    "Hayao", 
+    "Hosoda", 
+    "Shinkai", 
+    "Paprika",
+    "FastNeuralStyle_Candy",
+    "FastNeuralStyle_Mosaic",
+    "FastNeuralStyle_RainPrincess",
+    "FastNeuralStyle_Udnie",
+]
+
+settings.anime_style = "Shinkai" #@param ["Hayao", "Hosoda", "Shinkai", "Paprika", "FastNeuralStyle_Candy", "FastNeuralStyle_Mosaic", "FastNeuralStyle_RainPrincess", "FastNeuralStyle_Udnie"]
+
+
+#@markdown **Renderer Options**
+
+renderer_types = [
+    "opencvgif", 
+    "opencv", 
+    "pillowgif", 
+    "pillow",
+]
+
+settings.renderer = "opencv" #@param ["opencvgif", "opencv", "pillowgif", "pillow"]
+
+
+#@markdown **Video Options**
+
+video_codecs = [
+    "mp4v", 
+    "libx264",
+    "h264",
+]
+
+settings.video_codec = "mp4v" #@param ["mp4v", "libx264", "h264"]
+
+video_extension = "mp4"
+
+if settings.renderer.startswith("opencv"):
+    from src.video_writer import OpenCVWriter as VideoWriter
+    from src.image_loader import OpenCVImageLoader as ImageLoader
+    video_extension = "avi"
+elif settings.renderer.startswith("pillow"):
+    from src.video_writer import PillowWriter as VideoWriter
+    from src.image_loader import PillowImageLoader as ImageLoader
+    video_extension = "gif" if settings.renderer.endswith("gif") else "webp"
+
+if settings.video_codec == "mp4v":
+    video_extension = "mp4"
+
+def main(settings):
+    transform = get_transforms(settings.animation_resolution)
+    stylizer = DeforUM(anime_stylizers.index(settings.anime_style), settings.model)
+
+    img_loader = ImageLoader()
+    frames = img_loader.load(settings.input)
+    frames = [transform(frame) for frame in frames]
+
+    # start stylizing
+    output_frames = []
+    for i, frame in enumerate(frames):
+        output_frames.append(stylizer.stylize(frame))
+
+    # render and save
+    if settings.renderer.endswith("gif"):
+        imageio.mimsave(f"{settings.output_folder}/output.gif", output_frames, fps=settings.animation_fps)
+    else:
+        writer = VideoWriter(f"{settings.output_folder}/output.{video_extension}", settings.animation_fps, frames[0].shape[:2], settings.video_codec)
+        for frame in output_frames:
+            writer.write(frame)
+        writer.release()
+
+    print(f"Output file saved to {settings.output_folder}/output
+
 
     #@markdown **Prompt Settings**
     prompt_weighting = False #@param {type:"boolean"}
