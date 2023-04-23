@@ -496,7 +496,7 @@ def render_interpolation(args, anim_args):
 
 
 args_dict = DeforumArgs()
-anim_args_dict = DeforumAnimArgs()
+anim_args_dict = DeforumAnimArgs(args_dict)
 
 def DeforumAnimArgs():
     #@markdown ### Animation settings
