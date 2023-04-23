@@ -498,6 +498,15 @@ def render_interpolation(args, anim_args):
 args_dict = DeforumArgs()
 anim_args_dict = DeforumAnimArgs()
 
+def DeforumAnimArgs():
+    #@markdown ### Animation settings
+    make_animation = True #@param {type:"boolean"}
+    framerate = 15 #@param
+    anim_width = 512 #@param {type:"number"}
+    anim_height = 512 #@param {type:"number"}
+    anim_format = 'gif' #@param ['gif', 'mp4']
+    return {"make_animation": make_animation, "framerate": framerate, "anim_width": anim_width, "anim_height": anim_height, "anim_format": anim_format}
+
 if override_settings_with_file:
     print(f"reading custom settings from {custom_settings_file}")
     if not os.path.isfile(custom_settings_file):
