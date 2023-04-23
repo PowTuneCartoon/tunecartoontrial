@@ -32,8 +32,7 @@ def DeforumArgs():
     #@markdown **Batch Settings**
     n_batch = 1 #@param
     batch_name = "Adventure Story" #@param {type:"string"}
-    filename_format = "{timestring}_{index}_{prompt}.png" #@param ["{timestring}_{index}_{seed}.png","{timestring}_{index}_{prompt}.png"]
-    seed_behavior = "random" #@param ["iter","fixed","random"]
+    args_dict["output_path"] = "/content/drive/MyDrive/MyDemos/tunecartoontrial/outputs/" #@param {type:"string"}    seed_behavior = "random" #@param ["iter","fixed","random"]
     make_grid = False #@param {type:"boolean"}
     grid_rows = 2 #@param 
     outdir = get_output_folder(args_dict["output_path"], batch_name)
