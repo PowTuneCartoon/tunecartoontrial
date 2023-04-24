@@ -2,7 +2,8 @@
 override_settings_with_file = False #@param {type:"boolean"}
 custom_settings_file = "/content/drive/MyDrive/Settings.txt"#@param {type:"string"}
 
-def DeforumArgs():
+output_path = "/path/to/output/folder"
+def DeforumArgs(output_path):
     #@markdown **Image Settings**
     W = 448 #@param
     H = 706 #@param
