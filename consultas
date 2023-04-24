@@ -2,8 +2,7 @@
 override_settings_with_file = False #@param {type:"boolean"}
 custom_settings_file = "/content/drive/MyDrive/Settings.txt"#@param {type:"string"}
 
-output_path = "/path/to/output/folder"
-def DeforumArgs(output_path):
+def DeforumArgs():
     #@markdown **Image Settings**
     W = 448 #@param
     H = 706 #@param
@@ -554,4 +553,4 @@ elif anim_args.animation_mode == 'Video Input':
 elif anim_args.animation_mode == 'Interpolation':
     render_interpolation(args, anim_args)
 else:
-    render_image_batch(args)  
+    render_image_batch(args)    
